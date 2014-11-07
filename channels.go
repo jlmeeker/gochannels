@@ -1,10 +1,10 @@
 package main
 
 import (
-	"fmt"
-	"time"
 	"flag"
+	"fmt"
 	"runtime"
+	"time"
 )
 
 var debugFlag bool
@@ -35,14 +35,14 @@ func worker(queue chan int, quit chan bool) {
 	var delayDur = time.Duration(delayFlag)
 	for {
 		select {
-			case <-quit:
-				msg(fmt.Sprintf("\tworker exiting (%d jobs processed)\n", count))
-				workers--
-				return
-			case _ = <-queue:
-				msgD("-")
-				count++
-				time.Sleep(time.Microsecond*delayDur)
+		case <-quit:
+			msg(fmt.Sprintf("\tworker exiting (%d jobs processed)\n", count))
+			workers--
+			return
+		case _ = <-queue:
+			msgD("-")
+			count++
+			time.Sleep(time.Microsecond * delayDur)
 		}
 	}
 }
@@ -60,12 +60,12 @@ func init() {
 
 func main() {
 	flag.Parse()
-	
+
 	// If numcpus set to zero or larger than system logical cpus
 	if numcpusFlag == 0 || numcpusFlag > runtime.NumCPU() {
 		numcpusFlag = runtime.NumCPU()
 	}
-	
+
 	// Set channel (queue) size appropriately
 	if blockingFlag {
 		queuesizeFlag = 1
@@ -110,7 +110,6 @@ func main() {
 	}
 	end := time.Now()
 	msg("\n")
-	
 
 	// Kill workers (closing the channel will instruct all workers to exit)
 	close(quit)
@@ -122,7 +121,7 @@ func main() {
 
 	// Calculate elapsed time (just for job processing) and print out results
 	elapsedSeconds := end.Sub(start).Seconds()
-	iterPerSec := float64(iterationsFlag)/elapsedSeconds
+	iterPerSec := float64(iterationsFlag) / elapsedSeconds
 	fmt.Printf("\nElapsed time: %.4f secs\n", elapsedSeconds)
 	fmt.Printf("Jobs per second: %.4f\n", iterPerSec)
 }
